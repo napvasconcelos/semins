@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Seminários Interinstitucionais</title>
+  <meta name="description" content="Ciclo semanal de seminários entre centros de pesquisa em neurociências, saúde e robótica. Quartas-feiras, 12h às 13h, online.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <nav>
+    <a class="brand" href="index.html">seminários</a>
+    <a class="link active" href="index.html">Início</a>
+    <a class="link" href="programa.html">Programação</a>
+    <a class="link" href="pessoas.html">Pessoas</a>
+  </nav>
+
+  <div class="wrap">
+    <header>
+      <h1>Seminários Interinstitucionais</h1>
+      <p class="lead">Ciclo semanal de seminários entre centros de pesquisa, com um palestrante por instituição a cada encontro. Nasce do esforço de constituir, na UniMAX, um polo de pesquisa em neurociências, saúde e robótica, em parceria com instituições públicas e privadas.</p>
+      <ul class="facts">
+        <li><span class="k">Quando</span><span class="v">Quartas-feiras, 12h00 às 13h00</span></li>
+        <li><span class="k">Formato</span><span class="v">Online, pelo Google Meet</span></li>
+        <li><span class="k">Início</span><span class="v">19/08/2026</span></li>
+        <li><span class="k">Público</span><span class="v">Aberto</span></li>
+      </ul>
+    </header>
+
+    <!-- Próximo seminário: editar este bloco a cada semana. -->
+    <section class="next" aria-label="Próximo seminário">
+      <span class="when">Quarta, 19/08/2026 · 12h00</span>
+      <div class="row">
+        <img class="avatar" src="img/edgard-morya.jpg" width="104" height="104" alt="Retrato de Edgard Morya">
+        <div class="col">
+          <h2>Desafios em neuroengenharia e oportunidades para Engenharia Biomédica e Computação</h2>
+          <p class="who"><span class="name">Edgard Morya</span> <span class="aff">(IIN-ELS, Instituto Santos Dumont)</span></p>
+        </div>
+      </div>
+      <a class="btn" href="https://meet.google.com/uzr-ynwp-pva">Entrar pelo Google Meet</a>
+      <p class="btn-note">Link fixo do ciclo: <code>meet.google.com/uzr-ynwp-pva</code></p>
+    </section>
+
+    <section class="tzconv" aria-label="Conversor de horário para outros fusos">
+      <div class="tzconv-top">
+        <span class="tzconv-label">Horário no seu fuso</span>
+        <select id="tzselect" aria-label="Escolha um fuso horário"></select>
+      </div>
+      <p class="tzconv-out" id="tzout">Calculando o horário no seu fuso…</p>
+      <p class="tzconv-ref" id="tzref">Horário oficial: quartas-feiras, 12h00 às 13h00 em Recife (GMT-3).</p>
+    </section>
+
+    <div class="cats">
+      <a class="cat" href="programa.html">
+        <h3>Programação</h3>
+        <p>As oito primeiras quartas do ciclo, com o que já está confirmado em cada uma. <span class="arrow">&rarr;</span></p>
+      </a>
+      <a class="cat" href="pessoas.html">
+        <h3>Pessoas</h3>
+        <p>Quem organiza e quem apresenta: nome, filiação e cargo. <span class="arrow">&rarr;</span></p>
+      </a>
+    </div>
+
+    <footer>
+      Programação em construção e sujeita a ajustes. Datas sem palestrante ainda serão preenchidas.
+    </footer>
+  </div>
+
+  <script>
+  (function(){
+    // Datas do ciclo, sempre 12h00–13h00 em Recife (GMT-3).
+    // Manter em sincronia com programa.html ao acrescentar semanas.
+    var SESSOES = [
+      '2026-08-19','2026-08-26','2026-09-02','2026-09-09',
+      '2026-09-16','2026-09-23','2026-09-30','2026-10-07'
+    ];
+    var zones = [
+      ['America/Recife','Recife, Brasil (horário oficial)'],
+      ['America/Sao_Paulo','Brasília / São Paulo'],
+      ['America/Manaus','Manaus'],
+      ['Europe/Lisbon','Lisboa / Porto'],
+      ['Europe/London','Londres'],
+      ['Europe/Paris','Europa Central (Paris, Berlim)'],
+      ['America/New_York','EUA leste (Nova York)'],
+      ['America/Chicago','EUA central (Chicago)'],
+      ['America/Los_Angeles','EUA oeste (Los Angeles)'],
+      ['Asia/Tokyo','Tóquio'],
+      ['Australia/Sydney','Sydney']
+    ];
+
+    // Próxima sessão ainda não encerrada; se o ciclo já passou, usa a última.
+    var agora = new Date(), start = null, end = null;
+    for (var i = 0; i < SESSOES.length; i++) {
+      var s = new Date(SESSOES[i] + 'T12:00:00-03:00');
+      var e = new Date(SESSOES[i] + 'T13:00:00-03:00');
+      if (e >= agora) { start = s; end = e; break; }
+    }
+    if (!start) {
+      start = new Date(SESSOES[SESSOES.length-1] + 'T12:00:00-03:00');
+      end   = new Date(SESSOES[SESSOES.length-1] + 'T13:00:00-03:00');
+    }
+
+    var sel = document.getElementById('tzselect');
+    var out = document.getElementById('tzout');
+    var ref = document.getElementById('tzref');
+    if(!sel || !out) return;
+
+    var local;
+    try { local = Intl.DateTimeFormat().resolvedOptions().timeZone; } catch(e){ local = ''; }
+    if(local && !zones.some(function(z){ return z[0]===local; })){
+      zones.unshift([local, 'Seu fuso ('+local+')']);
+    }
+    zones.forEach(function(z){
+      var o = document.createElement('option');
+      o.value = z[0]; o.textContent = z[1];
+      sel.appendChild(o);
+    });
+    sel.value = local || 'America/Recife';
+    if(sel.selectedIndex < 0) sel.value = 'America/Recife';
+
+    function fmt(tz){
+      try{
+        var dDate = new Intl.DateTimeFormat('pt-BR',{weekday:'long',day:'2-digit',month:'2-digit',year:'numeric',timeZone:tz});
+        var dTime = new Intl.DateTimeFormat('pt-BR',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:tz});
+        var dDay  = new Intl.DateTimeFormat('en-CA',{year:'numeric',month:'2-digit',day:'2-digit',timeZone:tz});
+        var off = '';
+        try {
+          off = new Intl.DateTimeFormat('pt-BR',{timeZone:tz,timeZoneName:'shortOffset',hour:'2-digit'})
+                  .formatToParts(start).find(function(p){ return p.type==='timeZoneName'; }).value;
+        } catch(e){}
+        var st = dTime.format(start).replace(':','h');
+        var en = dTime.format(end).replace(':','h');
+        var roll = dDay.format(start) !== dDay.format(end) ? ' (termina no dia seguinte)' : '';
+        return dDate.format(start) + ', ' + st + '–' + en + (off ? ' (' + off + ')' : '') + roll;
+      } catch(e){
+        return 'Não foi possível calcular para este fuso.';
+      }
+    }
+    function update(){ out.textContent = fmt(sel.value); }
+    sel.addEventListener('change', update);
+    update();
+
+    if (ref) {
+      var refFmt = new Intl.DateTimeFormat('pt-BR',{weekday:'long',day:'2-digit',month:'2-digit',year:'numeric',timeZone:'America/Recife'});
+      ref.textContent = 'Referente ao próximo encontro: ' + refFmt.format(start) + ', 12h00 às 13h00 em Recife (GMT-3).';
+    }
+  })();
+  </script>
+</body>
+</html>
